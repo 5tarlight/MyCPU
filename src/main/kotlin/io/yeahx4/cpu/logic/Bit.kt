@@ -1,18 +1,19 @@
 package io.yeahx4.cpu.logic
 
 import io.yeahx4.cpu.exception.InvalidBitValueException
+import kotlin.Byte
 
-class Bit(value: Byte) {
-    var value: Byte = -1
+class Bit(value: Int) {
+    var value: Int = -1
         set(value) {
-            if (!(value.toInt() == 0 || value.toInt() == 1))
+            if (!(value == 0 || value == 1))
                 throw InvalidBitValueException(value)
 
             field = value
         }
 
     init {
-        if (!(value.toInt() == 0 || value.toInt() == 1))
+        if (!(value == 0 || value == 1))
             throw InvalidBitValueException(value)
 
         this.value = value
@@ -23,7 +24,7 @@ class Bit(value: Byte) {
     }
 
     fun toByte(): Byte {
-        return this.value
+        return this.value.toByte()
     }
 
     fun toShort(): Short {
