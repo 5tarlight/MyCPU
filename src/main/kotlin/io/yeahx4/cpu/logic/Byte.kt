@@ -39,6 +39,8 @@ class Byte(str: String) {
             }
     }
 
-    override fun toString(): String
-        = "${this.bits.slice(0 until 4).joinToString("")} ${this.bits.slice(4..7).joinToString("")}"
+    override fun toString(): String =
+        "${this.bits.slice(0 until 4).joinToString("")} ${this.bits.slice(4..7).joinToString("")}"
+
+    fun toList(): List<Bit> = bits.toList()
 }
