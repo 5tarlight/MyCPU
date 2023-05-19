@@ -1,6 +1,7 @@
 package io.yeahx4.cpu.logic
 
 import io.yeahx4.cpu.exception.ByteParsingError
+import kotlin.math.pow
 
 class Byte(str: String) {
     private val bits = mutableListOf(
@@ -20,7 +21,7 @@ class Byte(str: String) {
         if (str.length != 8)
             throw ByteParsingError(ByteParsingError.ByteParseExceptionType.INVALID_LENGTH)
 
-        val result = str
+        str
             .toCharArray()
             .map { it.toString() }
             .map {
@@ -43,4 +44,18 @@ class Byte(str: String) {
         "${this.bits.slice(0 until 4).joinToString("")} ${this.bits.slice(4..7).joinToString("")}"
 
     fun toList(): List<Bit> = bits.toList()
+
+    fun toDec(): Int {
+        return if (this.bits[0].value == 0) {
+            this.bits
+                .slice(1..7)
+                .mapIndexed { i, b ->
+                    b.value * 2.0.pow(7.0 - i).toInt()
+                }
+                .sum()
+        } else {
+            // TODO : Minus
+            -1
+        }
+    }
 }
