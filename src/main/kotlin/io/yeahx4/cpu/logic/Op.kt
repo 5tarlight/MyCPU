@@ -34,5 +34,9 @@ class Op {
 
             return Byte(sb.reversed().toString())
         }
+
+        fun minus(b1: Byte, b2: Byte): Byte {
+            return plus(b1, b2.toNegative())
+        }
     }
 }
