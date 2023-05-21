@@ -103,7 +103,12 @@ class Byte(str: String) {
                 .sum()
         } else {
             val pos = this.toPositive()
-            -pos.toDec()
+            val dec = -pos.toDec()
+
+            if (dec == 0)
+                -128
+            else
+                dec
         }
     }
 }
