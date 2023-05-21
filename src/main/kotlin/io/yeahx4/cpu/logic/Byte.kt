@@ -1,9 +1,9 @@
 package io.yeahx4.cpu.logic
 
-import io.yeahx4.cpu.exception.ByteOutOfBoundException
-import io.yeahx4.cpu.exception.ByteParsingException
-import io.yeahx4.cpu.exception.NegativeByteException
-import io.yeahx4.cpu.exception.PositiveByteException
+import io.yeahx4.cpu.logic.exception.ByteOutOfBoundException
+import io.yeahx4.cpu.logic.exception.ByteParsingException
+import io.yeahx4.cpu.logic.exception.NegativeByteException
+import io.yeahx4.cpu.logic.exception.PositiveByteException
 import kotlin.math.pow
 
 /**
