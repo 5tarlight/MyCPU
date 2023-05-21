@@ -12,6 +12,8 @@ import kotlin.math.pow
  *
  * @see Op
  * @since 1.0
+ * @param str binary String
+ * @throws ByteParsingException Unable to parse String to byte
  */
 class Byte(str: String) {
     companion object {
