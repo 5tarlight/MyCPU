@@ -1,6 +1,9 @@
 package io.yeahx4.cpu.logic
 
 import io.yeahx4.cpu.exception.ByteParsingError
+import io.yeahx4.cpu.exception.NegativeByteException
+import io.yeahx4.cpu.exception.PositiveByteException
+import java.lang.StringBuilder
 import kotlin.math.pow
 
 class Byte(str: String) {
@@ -45,17 +48,62 @@ class Byte(str: String) {
 
     fun toList(): List<Bit> = bits.toList()
 
+    private fun notBits(): Byte {
+        val sb = StringBuilder(this.bits[0].value.toString())
+
+        this.bits
+            .slice(1..7)
+            .stream()
+            .map { it.toInt() }
+            .map { if (it == 0) 1 else 0 }
+            .forEach { sb.append(it) }
+
+        return Byte(sb.toString())
+    }
+
+    fun complement(): Byte {
+        val b = this.notBits()
+        return Op.plus(b, Byte("00000001"))
+    }
+
+    fun isNegative(): Boolean = this.bits[0].value == 1
+
+    fun toNegative(): Byte {
+        if (this.isNegative())
+            throw NegativeByteException()
+
+        val neg = this.complement();
+        neg.bits[0].value = 1
+
+        return neg
+    }
+
+    fun uncomplement(): Byte {
+        return Op.plus(this, Byte("00000001").toNegative())
+            .notBits()
+    }
+
+    fun toPositive(): Byte {
+        if (!this.isNegative())
+            throw PositiveByteException()
+
+        val b = this.uncomplement()
+        b.bits[0].value = 0
+
+        return b
+    }
+
     fun toDec(): Int {
-        return if (this.bits[0].value == 0) {
+        return if (!this.isNegative()) {
             this.bits
                 .slice(1..7)
                 .mapIndexed { i, b ->
-                    b.value * 2.0.pow(7.0 - i).toInt()
+                    b.value * 2.0.pow(6.0 - i).toInt()
                 }
                 .sum()
         } else {
-            // TODO : Minus
-            -1
+            val pos = this.toPositive()
+            -pos.toDec()
         }
     }
 }

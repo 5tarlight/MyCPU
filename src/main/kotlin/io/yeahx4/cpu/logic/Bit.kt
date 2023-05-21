@@ -32,7 +32,7 @@ class Bit(value: Int) {
     }
 
     fun toInt(): Int {
-        return this.value.toInt()
+        return this.value
     }
 
     fun toLong(): Long {
@@ -40,10 +40,10 @@ class Bit(value: Int) {
     }
 
     fun isPos(): Boolean {
-        return this.value.toInt() == 1
+        return this.value == 1
     }
 
     fun isNeg(): Boolean {
-        return this.value.toInt() == 0
+        return this.value == 0
     }
 }
