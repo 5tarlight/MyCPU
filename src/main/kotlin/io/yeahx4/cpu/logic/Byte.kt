@@ -7,6 +7,11 @@ import java.lang.StringBuilder
 import kotlin.math.pow
 
 class Byte(str: String) {
+    companion object {
+        const val MIN_VALUE = -128
+        const val MAX_VALUE = 127
+    }
+
     private val bits = mutableListOf(
         Bit(0),
         Bit(0),
