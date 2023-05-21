@@ -1,6 +1,6 @@
 package io.yeahx4.cpu.exception
 
-class ByteParsingError(private val type: ByteParseExceptionType): Exception() {
+class ByteParsingException(private val type: ByteParseExceptionType): Exception() {
     enum class ByteParseExceptionType {
         INVALID_LENGTH,
         INVALID_NUMBER_FORMAT,

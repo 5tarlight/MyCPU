@@ -1,15 +1,45 @@
 package io.yeahx4.cpu.logic
 
-import io.yeahx4.cpu.exception.ByteParsingError
+import io.yeahx4.cpu.exception.ByteOutofBoundException
+import io.yeahx4.cpu.exception.ByteParsingException
 import io.yeahx4.cpu.exception.NegativeByteException
 import io.yeahx4.cpu.exception.PositiveByteException
-import java.lang.StringBuilder
 import kotlin.math.pow
 
 class Byte(str: String) {
     companion object {
         const val MIN_VALUE = -128
         const val MAX_VALUE = 127
+
+        fun fromDec(value: Int): Byte {
+            var v = value
+            if (value < MIN_VALUE || value > MAX_VALUE)
+                throw ByteOutofBoundException()
+
+            return if (value >= 0) {
+                var digit = 6
+                val sb = StringBuilder("0")
+
+                while (digit >= 0) {
+                    val pos = 2.0.pow(digit.toDouble()).toInt()
+                    if (v >= pos) {
+                        sb.append("1")
+                        v -= pos
+                    } else {
+                        sb.append("0")
+                    }
+
+                    digit--
+                }
+
+                Byte(sb.toString())
+            } else {
+                if (value == MIN_VALUE)
+                    return Byte("10000000")
+
+                return fromDec(-value).toNegative()
+            }
+        }
     }
 
     private val bits = mutableListOf(
@@ -27,7 +57,7 @@ class Byte(str: String) {
 
     init {
         if (str.length != 8)
-            throw ByteParsingError(ByteParsingError.ByteParseExceptionType.INVALID_LENGTH)
+            throw ByteParsingException(ByteParsingException.ByteParseExceptionType.INVALID_LENGTH)
 
         str
             .toCharArray()
@@ -36,17 +66,19 @@ class Byte(str: String) {
                 try {
                     return@map it.toInt()
                 } catch (_: NumberFormatException) {
-                    throw ByteParsingError(ByteParsingError.ByteParseExceptionType.INVALID_NUMBER_FORMAT)
+                    throw ByteParsingException(ByteParsingException.ByteParseExceptionType.INVALID_NUMBER_FORMAT)
                 }
             }
             .forEachIndexed { i, v ->
                 if (v != 0 && v != 1)
-                    throw ByteParsingError(ByteParsingError.ByteParseExceptionType.INVALID_BIT)
+                    throw ByteParsingException(ByteParsingException.ByteParseExceptionType.INVALID_BIT)
 
                 if (bits[i].value != v)
                     bits[i].value = v
             }
     }
+
+    fun constructor(value: Int) = fromDec(value)
 
     override fun toString(): String =
         "${this.bits.slice(0 until 4).joinToString("")} ${this.bits.slice(4..7).joinToString("")}"
@@ -73,6 +105,8 @@ class Byte(str: String) {
 
     fun isNegative(): Boolean = this.bits[0].value == 1
 
+    fun isPositive(): Boolean = this.bits[0].value == 0
+
     fun toNegative(): Byte {
         if (this.isNegative())
             throw NegativeByteException()
@@ -89,7 +123,7 @@ class Byte(str: String) {
     }
 
     fun toPositive(): Byte {
-        if (!this.isNegative())
+        if (this.isPositive())
             throw PositiveByteException()
 
         val b = this.uncomplement()
@@ -99,7 +133,7 @@ class Byte(str: String) {
     }
 
     fun toDec(): Int {
-        return if (!this.isNegative()) {
+        return if (this.isPositive()) {
             this.bits
                 .slice(1..7)
                 .mapIndexed { i, b ->
