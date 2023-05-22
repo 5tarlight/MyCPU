@@ -28,7 +28,7 @@ class InteractiveShell {
                         break
                     }
 
-                    println(cmd.payload.toString())
+                    cmd.execute()
                 } catch (ex: UnexpectedInlineTokenException) {
                     println("Error : ${ex.message}")
                     continue
