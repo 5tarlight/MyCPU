@@ -15,7 +15,7 @@ import kotlin.math.pow
  * @param str binary String
  * @throws ByteParsingException Unable to parse String to byte
  */
-class Byte(str: String) {
+class VByte(str: String) {
     companion object {
         /**
          * Minimum value of signed byte.
@@ -36,7 +36,7 @@ class Byte(str: String) {
          * @throws ByteOutOfBoundException Given decimal value is out of bound(-128 ~ 127)
          * @since 1.0
          */
-        fun fromDec(value: Int): Byte {
+        fun fromDec(value: Int): VByte {
             var v = value
             if (value < MIN_VALUE || value > MAX_VALUE)
                 throw ByteOutOfBoundException()
@@ -57,10 +57,10 @@ class Byte(str: String) {
                     digit--
                 }
 
-                Byte(sb.toString())
+                VByte(sb.toString())
             } else {
                 if (value == MIN_VALUE)
-                    return Byte("10000000")
+                    return VByte("10000000")
 
                 return fromDec(-value).toNegative()
             }
@@ -113,7 +113,7 @@ class Byte(str: String) {
      * Create new `Byte` instance with decimal value.
      * Works same as `Byte.fromDec(Int)`
      *
-     * @see Byte.fromDec
+     * @see VByte.fromDec
      * @since 1.0
      */
     fun constructor(value: Int) = fromDec(value)
@@ -128,7 +128,7 @@ class Byte(str: String) {
      * ```
      *
      * @see String
-     * @see Byte.fromDec
+     * @see VByte.fromDec
      * @since 1.0
      */
     override fun toString(): String =
@@ -148,7 +148,7 @@ class Byte(str: String) {
      *
      * @since 1.0
      */
-    private fun notBits(): Byte {
+    private fun notBits(): VByte {
         val sb = StringBuilder(this.bits[0].value.toString())
 
         this.bits
@@ -158,7 +158,7 @@ class Byte(str: String) {
             .map { if (it == 0) 1 else 0 }
             .forEach { sb.append(it) }
 
-        return Byte(sb.toString())
+        return VByte(sb.toString())
     }
 
     /**
@@ -171,9 +171,9 @@ class Byte(str: String) {
      * @see notBits
      * @since 1.0
      */
-    private fun complement(): Byte {
+    private fun complement(): VByte {
         val b = this.notBits()
-        return Op.plus(b, Byte("00000001"))
+        return Op.plus(b, VByte("00000001"))
     }
 
     /**
@@ -198,7 +198,7 @@ class Byte(str: String) {
      * @since 1.0
      * @throws NegativeByteException Original byte is already negative.
      */
-    fun toNegative(): Byte {
+    fun toNegative(): VByte {
         if (this.isNegative())
             throw NegativeByteException()
 
@@ -214,8 +214,8 @@ class Byte(str: String) {
      * @see complement
      * @since 1.0
      */
-    private fun uncomplement(): Byte {
-        return Op.plus(this, Byte("00000001").toNegative())
+    private fun uncomplement(): VByte {
+        return Op.plus(this, VByte("00000001").toNegative())
             .notBits()
     }
 
@@ -226,7 +226,7 @@ class Byte(str: String) {
      * @see toNegative
      * @throws PositiveByteException Original byte is already positive.
      */
-    fun toPositive(): Byte {
+    fun toPositive(): VByte {
         if (this.isPositive())
             throw PositiveByteException()
 

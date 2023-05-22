@@ -4,7 +4,7 @@ package io.yeahx4.cpu.logic.exception
  * Unable to parse String to Byte.
  *
  * @since 1.0
- * @see io.yeahx4.cpu.logic.Byte
+ * @see io.yeahx4.cpu.logic.VByte
  * @see ByteParseExceptionType
  * @param type Specific type of exception.
  */

@@ -27,6 +27,8 @@ class InteractiveShell {
                         println("Gracefully terminating interactive shell...")
                         break
                     }
+
+                    println(cmd.payload.toString())
                 } catch (ex: UnexpectedInlineTokenException) {
                     println("Error : ${ex.message}")
                     continue

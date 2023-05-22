@@ -13,9 +13,9 @@ class InlineCommandParser {
             when (command[0]) {
                 "var" -> {
                     type = InlineCommandType.NEW_VAR
-                    payload = NewVarPayload()
+                    payload = NewVarPayload(command)
                 }
-                "quit" -> {
+                "quit", "exit" -> {
                     type = InlineCommandType.QUIT
                     payload = QuitPayload()
                 }
