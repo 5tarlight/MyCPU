@@ -3,7 +3,7 @@ package io.yeahx4.cpu.logic
 /// Byte Operation
 class Op {
     companion object {
-        fun plus(b1: Byte, b2: Byte): Byte {
+        fun plus(b1: VByte, b2: VByte): VByte {
             var up = 0
             val sb = StringBuilder()
 
@@ -32,10 +32,10 @@ class Op {
                     sb.append(result.toString())
                 }
 
-            return Byte(sb.reversed().toString())
+            return VByte(sb.reversed().toString())
         }
 
-        fun minus(b1: Byte, b2: Byte): Byte {
+        fun minus(b1: VByte, b2: VByte): VByte {
             return plus(b1, b2.toNegative())
         }
     }
