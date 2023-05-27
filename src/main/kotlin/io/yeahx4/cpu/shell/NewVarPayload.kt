@@ -1,7 +1,6 @@
 package io.yeahx4.cpu.shell
 
 import io.yeahx4.cpu.logic.VByte
-import io.yeahx4.cpu.shell.exception.UnexpectedInlineTokenException
 
 class NewVarPayload(args: List<String>): InlineCommandPayload {
     val name: String

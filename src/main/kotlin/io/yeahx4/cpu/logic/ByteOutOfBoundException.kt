@@ -1,4 +1,4 @@
-package io.yeahx4.cpu.logic.exception
+package io.yeahx4.cpu.logic
 
 /**
  * Value is not valid.

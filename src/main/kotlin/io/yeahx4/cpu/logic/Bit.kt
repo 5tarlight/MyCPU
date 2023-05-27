@@ -1,6 +1,5 @@
 package io.yeahx4.cpu.logic
 
-import io.yeahx4.cpu.logic.exception.InvalidBitValueException
 import kotlin.Byte
 
 class Bit(value: Int) {

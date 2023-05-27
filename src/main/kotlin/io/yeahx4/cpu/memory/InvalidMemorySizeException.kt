@@ -1,4 +1,4 @@
-package io.yeahx4.cpu.memory.exception
+package io.yeahx4.cpu.memory
 
 class InvalidMemorySizeException: Exception() {
     override val message: String

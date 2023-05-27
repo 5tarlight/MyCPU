@@ -1,8 +1,6 @@
 package io.yeahx4.cpu.memory
 
-import io.yeahx4.cpu.memory.exception.InvalidMemorySizeException
-
-abstract class VRam<T: Cloneable>(size: Int): Storable<T> {
+abstract class Memory<T: Cloneable>(size: Int): Storable<T> {
     protected val storage: Int
 
     init {
