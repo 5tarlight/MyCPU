@@ -26,6 +26,11 @@ class VByte(str: String) {
         const val MAX_VALUE = 127
 
         /**
+         * Maximum value of unsigned byte.
+         */
+        const val UNSIGNED_MAX_VALUE = 256
+
+        /**
          * Create a new `Byte` instance with decimal value.
          *
          * @param value decimal value of byte. -128 ~ 127
