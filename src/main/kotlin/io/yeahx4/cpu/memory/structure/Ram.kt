@@ -3,26 +3,23 @@ package io.yeahx4.cpu.memory.structure
 import io.yeahx4.cpu.logic.VByte
 import io.yeahx4.cpu.memory.AddressOutOfBoundException
 import io.yeahx4.cpu.memory.Memory
+import io.yeahx4.cpu.util.Duplicatable
 
-class Ram<T: Cloneable>: Memory<T>(VByte.UNSIGNED_MAX_VALUE) {
+class Ram<T: Duplicatable<T>>: Memory<T>(VByte.UNSIGNED_MAX_VALUE) {
     private val data = mutableMapOf<Int, T>()
 
-    override fun getStorage(): Int {
-        return this.storage
-    }
-
     private fun checkBound(addr: Int) {
-        if (addr < 0 || addr >= getStorage()) {
+        if (addr < 0 || addr >= storage) {
             throw AddressOutOfBoundException()
         }
     }
 
     override fun write(addr: Int, value: T) {
         checkBound(addr)
-        data[addr] = value
+        data[addr] = value.duplicate()
     }
 
-    override fun read(addr: Int): T? {
+    override fun get(addr: Int): T? {
         checkBound(addr)
         return data[addr]
     }

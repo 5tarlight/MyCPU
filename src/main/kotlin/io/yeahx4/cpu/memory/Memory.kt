@@ -1,7 +1,9 @@
 package io.yeahx4.cpu.memory
 
-abstract class Memory<T: Cloneable>(size: Int): Storable<T> {
-    protected val storage: Int
+import io.yeahx4.cpu.util.Duplicatable
+
+abstract class Memory<T: Duplicatable<T>>(size: Int): Storable<T> {
+    val storage: Int
 
     init {
         if (size <= 0)

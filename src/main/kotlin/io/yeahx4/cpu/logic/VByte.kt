@@ -1,5 +1,6 @@
 package io.yeahx4.cpu.logic
 
+import io.yeahx4.cpu.util.Duplicatable
 import kotlin.math.pow
 
 /**
@@ -11,7 +12,7 @@ import kotlin.math.pow
  * @param str binary String
  * @throws ByteParsingException Unable to parse String to byte
  */
-class VByte(str: String) {
+class VByte(str: String): Duplicatable<VByte> {
     companion object {
         /**
          * Minimum value of signed byte.
@@ -259,5 +260,12 @@ class VByte(str: String) {
             else
                 dec
         }
+    }
+
+    /**
+     * Clone itself to new instance.
+     */
+    override fun duplicate(): VByte {
+        return fromDec(this.toDec())
     }
 }
