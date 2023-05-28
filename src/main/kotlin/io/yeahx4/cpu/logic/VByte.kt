@@ -12,7 +12,7 @@ import kotlin.math.pow
  * @param str binary String
  * @throws ByteParsingException Unable to parse String to byte
  */
-class VByte(str: String): Duplicatable<VByte> {
+class VByte(str: String, private val signed: Boolean = true): Duplicatable<VByte> {
     companion object {
         /**
          * Minimum value of signed byte.
@@ -38,17 +38,51 @@ class VByte(str: String): Duplicatable<VByte> {
          * @throws ByteOutOfBoundException Given decimal value is out of bound(-128 ~ 127)
          * @since 1.0
          */
-        fun fromDec(value: Int): VByte {
+        fun fromDec(value: Int, signed: Boolean = true): VByte {
             var v = value
-            if (value < MIN_VALUE || value > MAX_VALUE)
-                throw ByteOutOfBoundException()
+            if (signed) {
+                if (value < MIN_VALUE || value > MAX_VALUE) {
+                    throw ByteOutOfBoundException(true)
+                }
+            } else {
+                if (value < 0 || value > UNSIGNED_MAX_VALUE) {
+                    throw ByteOutOfBoundException(false)
+                }
+            }
 
-            return if (value >= 0) {
-                var digit = 6
-                val sb = StringBuilder("0")
+            return if (signed) {
+                if (value >= 0) {
+                    // Signed Positive value parsing
+                    var digit = 6
+                    val sb = StringBuilder("0")
+
+                    while (digit >= 0) {
+                        val pos = 2.0.pow(digit.toDouble()).toInt()
+                        if (v >= pos) {
+                            sb.append("1")
+                            v -= pos
+                        } else {
+                            sb.append("0")
+                        }
+
+                        digit--
+                    }
+
+                    VByte(sb.toString())
+                } else {
+                    // Signed negative value parsing
+                    if (value == MIN_VALUE)
+                        return VByte("10000000")
+
+                    fromDec(-value).toNegative()
+                }
+            } else {
+                var digit = 7
+                val sb = StringBuilder()
 
                 while (digit >= 0) {
                     val pos = 2.0.pow(digit.toDouble()).toInt()
+
                     if (v >= pos) {
                         sb.append("1")
                         v -= pos
@@ -59,12 +93,7 @@ class VByte(str: String): Duplicatable<VByte> {
                     digit--
                 }
 
-                VByte(sb.toString())
-            } else {
-                if (value == MIN_VALUE)
-                    return VByte("10000000")
-
-                return fromDec(-value).toNegative()
+                VByte(sb.toString(), false)
             }
         }
     }
@@ -112,15 +141,6 @@ class VByte(str: String): Duplicatable<VByte> {
     }
 
     /**
-     * Create new `Byte` instance with decimal value.
-     * Works same as `Byte.fromDec(Int)`
-     *
-     * @see VByte.fromDec
-     * @since 1.0
-     */
-    fun constructor(value: Int) = fromDec(value)
-
-    /**
      * Converts byte into binary `String`.
      *
      * # Example
@@ -151,16 +171,26 @@ class VByte(str: String): Duplicatable<VByte> {
      * @since 1.0
      */
     private fun notBits(): VByte {
-        val sb = StringBuilder(this.bits[0].value.toString())
+        return if (signed) {
+            val sb = StringBuilder(this.bits[0].value.toString())
 
-        this.bits
-            .slice(1..7)
-            .stream()
-            .map { it.toInt() }
-            .map { if (it == 0) 1 else 0 }
-            .forEach { sb.append(it) }
+            this.bits
+                .slice(1..7)
+                .map { it.toInt() }
+                .map { if (it == 0) 1 else 0 }
+                .forEach { sb.append(it) }
 
-        return VByte(sb.toString())
+            VByte(sb.toString())
+        } else {
+            val sb = StringBuilder()
+
+            this.bits
+                .map { it.toInt() }
+                .map { if (it == 0) 1 else 0 }
+                .forEach { sb.append(it) }
+
+            VByte(sb.toString())
+        }
     }
 
     /**
@@ -184,7 +214,7 @@ class VByte(str: String): Duplicatable<VByte> {
      * @see isPositive
      * @since 1.0
      */
-    fun isNegative(): Boolean = this.bits[0].value == 1
+    fun isNegative(): Boolean = this.bits[0].value == 1 && signed
 
     /**
      * Check is this byte positive.
@@ -192,7 +222,7 @@ class VByte(str: String): Duplicatable<VByte> {
      * @see isNegative
      * @since 1.0
      */
-    fun isPositive(): Boolean = this.bits[0].value == 0
+    fun isPositive(): Boolean = this.bits[0].value == 0 || !signed
 
     /**
      * Create a new byte whose value is negative value of current byte.
@@ -201,8 +231,11 @@ class VByte(str: String): Duplicatable<VByte> {
      * @throws NegativeByteException Original byte is already negative.
      */
     fun toNegative(): VByte {
-        if (this.isNegative())
+        if (!signed) {
+            throw UnsignedByteException()
+        } else if (this.isNegative()) {
             throw NegativeByteException()
+        }
 
         val neg = this.complement();
         neg.bits[0].value = 1
@@ -244,21 +277,29 @@ class VByte(str: String): Duplicatable<VByte> {
      * @since 1.0
      */
     fun toDec(): Int {
-        return if (this.isPositive()) {
+        return if (signed) {
+            if (this.isPositive()) {
+                this.bits
+                    .slice(1..7)
+                    .mapIndexed { i, b ->
+                        b.value * 2.0.pow(6.0 - i).toInt()
+                    }
+                    .sum()
+            } else {
+                val pos = this.toPositive()
+                val dec = -pos.toDec()
+
+                if (dec == 0)
+                    -128
+                else
+                    dec
+            }
+        } else {
             this.bits
-                .slice(1..7)
                 .mapIndexed { i, b ->
-                    b.value * 2.0.pow(6.0 - i).toInt()
+                    b.value * 2.0.pow(7.0 - i).toInt()
                 }
                 .sum()
-        } else {
-            val pos = this.toPositive()
-            val dec = -pos.toDec()
-
-            if (dec == 0)
-                -128
-            else
-                dec
         }
     }
 
@@ -266,6 +307,6 @@ class VByte(str: String): Duplicatable<VByte> {
      * Clone itself to new instance.
      */
     override fun duplicate(): VByte {
-        return fromDec(this.toDec())
+        return fromDec(this.toDec(), signed)
     }
 }

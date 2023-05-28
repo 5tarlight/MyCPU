@@ -6,7 +6,12 @@ package io.yeahx4.cpu.logic
  *
  * @since 1.0
  */
-class ByteOutOfBoundException: Exception() {
+class ByteOutOfBoundException(private val signed: Boolean): Exception() {
     override val message: String
-        get() = "Value of byte should be within -127 ~ 128"
+        get() {
+            return if (signed)
+                "Value of signed byte should be within -128 ~ 127"
+            else
+                "Value of unsigned byte should be within 0 ~ 255"
+        }
 }
