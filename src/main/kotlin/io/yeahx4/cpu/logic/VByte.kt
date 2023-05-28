@@ -245,7 +245,7 @@ class VByte(str: String, private val signed: Boolean = true): Duplicatable<VByte
             throw NegativeByteException()
         }
 
-        val neg = this.complement();
+        val neg = this.complement()
         neg.bits[0].value = 1
 
         return neg
