@@ -29,7 +29,7 @@ class VByte(str: String, private val signed: Boolean = true): Duplicatable<VByte
         /**
          * Maximum value of unsigned byte.
          */
-        const val UNSIGNED_MAX_VALUE = 256
+        const val UNSIGNED_MAX_VALUE = 255
 
         /**
          * Create a new `Byte` instance with decimal value.
@@ -153,8 +153,16 @@ class VByte(str: String, private val signed: Boolean = true): Duplicatable<VByte
      * @see VByte.fromDec
      * @since 1.0
      */
-    override fun toString(): String =
-        "${this.bits.slice(0 until 4).joinToString("")} ${this.bits.slice(4..7).joinToString("")}"
+    override fun toString(): String {
+        return this.toString(true)
+    }
+
+    fun toString(deco: Boolean): String {
+        return if (deco)
+            "${this.bits.slice(0 until 4).joinToString("")} ${this.bits.slice(4..7).joinToString("")}"
+        else
+            this.bits.joinToString("")
+    }
 
     /**
      * Convert byte into immutable list of bits.
