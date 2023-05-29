@@ -2,10 +2,10 @@ package io.yeahx4.cpu.memory
 
 import io.yeahx4.cpu.util.Duplicatable
 
-interface Storable<T: Duplicatable<T>> {
-    fun write(addr: Int, value: T)
-    fun get(addr: Int): T?
-    fun erase(addr: Int)
-    fun getAndErase(addr: Int): T?
-    fun getOrElse(addr: Int, otherwise: T): T
+interface Storable<K, T: Duplicatable<T>> {
+    fun write(addr: K, value: T)
+    fun get(addr: K): T?
+    fun erase(addr: K)
+    fun getAndErase(addr: K): T?
+    fun getOrElse(addr: K, otherwise: T): T
 }

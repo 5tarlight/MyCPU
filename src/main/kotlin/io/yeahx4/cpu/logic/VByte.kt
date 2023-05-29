@@ -1,6 +1,7 @@
 package io.yeahx4.cpu.logic
 
 import io.yeahx4.cpu.util.Duplicatable
+import java.util.Objects
 import kotlin.math.pow
 
 /**
@@ -316,5 +317,18 @@ class VByte(str: String, private val signed: Boolean = true): Duplicatable<VByte
      */
     override fun duplicate(): VByte {
         return fromDec(this.toDec(), signed)
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (other !is VByte)
+            return false
+
+        return this.toDec() == other.toDec() && this.signed == other.signed
+    }
+
+    override fun hashCode(): Int {
+        // In order to use bits whose type is List<Bit> for hashing
+        // Bit should override equals and hashCode method properly.
+        return Objects.hash(this.bits, this.signed)
     }
 }

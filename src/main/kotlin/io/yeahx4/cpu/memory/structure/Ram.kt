@@ -6,7 +6,7 @@ import io.yeahx4.cpu.memory.Memory
 import io.yeahx4.cpu.util.Duplicatable
 
 @Deprecated("This class is mis-designed.")
-class Ram<T: Duplicatable<T>>: Memory<T>(VByte.UNSIGNED_MAX_VALUE) {
+class Ram<T: Duplicatable<T>>: Memory<Int, T>(VByte.UNSIGNED_MAX_VALUE) {
     private val data = mutableMapOf<Int, T>()
 
     private fun checkBound(addr: Int) {
@@ -38,5 +38,9 @@ class Ram<T: Duplicatable<T>>: Memory<T>(VByte.UNSIGNED_MAX_VALUE) {
     override fun getOrElse(addr: Int, otherwise: T): T {
         checkBound(addr)
         return data[addr] ?: otherwise
+    }
+
+    override fun clear() {
+        this.data.clear()
     }
 }

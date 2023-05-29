@@ -2,7 +2,7 @@ package io.yeahx4.cpu.memory
 
 import io.yeahx4.cpu.util.Duplicatable
 
-abstract class Memory<T: Duplicatable<T>>(size: Int): Storable<T> {
+abstract class Memory<K, T: Duplicatable<T>>(size: Int): Storable<K, T> {
     val storage: Int
 
     init {
@@ -11,4 +11,6 @@ abstract class Memory<T: Duplicatable<T>>(size: Int): Storable<T> {
 
         this.storage = size
     }
+
+    abstract fun clear();
 }
