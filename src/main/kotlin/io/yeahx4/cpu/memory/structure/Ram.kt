@@ -5,6 +5,7 @@ import io.yeahx4.cpu.memory.AddressOutOfBoundException
 import io.yeahx4.cpu.memory.Memory
 import io.yeahx4.cpu.util.Duplicatable
 
+@Deprecated("This class is mis-designed.")
 class Ram<T: Duplicatable<T>>: Memory<T>(VByte.UNSIGNED_MAX_VALUE) {
     private val data = mutableMapOf<Int, T>()
 
