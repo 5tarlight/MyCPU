@@ -1,7 +1,5 @@
 package io.yeahx4.cpu.shell
 
-import io.yeahx4.cpu.shell.exception.UnexpectedInlineTokenException
-
 class InlineCommandParser {
     companion object {
         fun parse(command: List<String>): InlineCommand {

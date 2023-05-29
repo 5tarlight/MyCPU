@@ -1,6 +1,5 @@
 package io.yeahx4.cpu.shell
 
-import io.yeahx4.cpu.shell.exception.UnexpectedInlineTokenException
 import java.io.InputStream
 import java.util.Scanner
 

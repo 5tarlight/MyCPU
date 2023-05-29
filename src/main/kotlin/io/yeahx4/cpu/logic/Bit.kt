@@ -1,6 +1,6 @@
 package io.yeahx4.cpu.logic
 
-import io.yeahx4.cpu.logic.exception.InvalidBitValueException
+import java.util.Objects
 import kotlin.Byte
 
 class Bit(value: Int) {
@@ -45,5 +45,16 @@ class Bit(value: Int) {
 
     fun isNeg(): Boolean {
         return this.value == 0
+    }
+
+    override fun equals(other: Any?): Boolean {
+        return if (other is Bit)
+            this.value == other.value
+        else
+            false
+    }
+
+    override fun hashCode(): Int {
+        return Objects.hashCode(this.value)
     }
 }

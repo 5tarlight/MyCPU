@@ -1,4 +1,4 @@
-package io.yeahx4.cpu.logic.exception
+package io.yeahx4.cpu.logic
 
 /**
  * Target byte is already negative.
