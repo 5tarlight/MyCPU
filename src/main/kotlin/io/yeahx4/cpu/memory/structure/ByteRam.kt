@@ -3,6 +3,7 @@ package io.yeahx4.cpu.memory.structure
 import io.yeahx4.cpu.logic.VByte
 import io.yeahx4.cpu.memory.AddressOutOfBoundException
 import io.yeahx4.cpu.memory.Memory
+import io.yeahx4.cpu.memory.NullMemoryPointerException
 import io.yeahx4.cpu.util.Duplicatable
 
 class ByteRam<T: Duplicatable<T>>: Memory<VByte, T>(VByte.UNSIGNED_MAX_VALUE) {
@@ -61,5 +62,17 @@ class ByteRam<T: Duplicatable<T>>: Memory<VByte, T>(VByte.UNSIGNED_MAX_VALUE) {
 
     override fun clear() {
         this.data.clear()
+    }
+
+    fun modify(addr: VByte, value: T) {
+        if (!this.data.containsKey(addr))
+            throw NullMemoryPointerException()
+
+        this.data[addr] = value.duplicate()
+    }
+
+    fun modify(addr: Int, value: T) {
+        val b = VByte.fromDec(addr)
+        this.modify(b, value)
     }
 }

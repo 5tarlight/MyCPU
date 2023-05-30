@@ -41,4 +41,13 @@ class ByteRamTest {
         for (i in 0..VByte.MAX_VALUE)
             assert(ram.get(i) == null)
     }
+
+    @Test
+    fun `Modify value`() {
+        val ram = ByteRam<VByte>()
+        ram.write(10, VByte.fromDec(10))
+        ram.modify(10, VByte.fromDec(20))
+
+        assert(ram.get(10)!!.toDec() == 20)
+    }
 }
