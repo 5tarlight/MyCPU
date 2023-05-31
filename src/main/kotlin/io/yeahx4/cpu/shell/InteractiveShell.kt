@@ -1,5 +1,8 @@
 package io.yeahx4.cpu.shell
 
+import io.yeahx4.cpu.assembly.command.Command
+import io.yeahx4.cpu.assembly.command.CommandType
+import io.yeahx4.cpu.assembly.command.UnexpectedCommandTokenException
 import java.io.InputStream
 import java.util.Scanner
 
@@ -13,22 +16,22 @@ class InteractiveShell {
 
             while (true) {
                 print("> ")
-                val command = scanner.nextLine().trim().split(" ")
+                val command = scanner.nextLine().trim()
                 val startTime = System.currentTimeMillis()
 
                 if (command.isEmpty())
                     continue
 
                 try {
-                    val cmd = InlineCommandParser.parse(command)
+                    val cmd = Command.from(command)
 
-                    if (cmd.type == InlineCommandType.QUIT) {
+                    if (cmd.type == CommandType.QUIT) {
                         println("Gracefully terminating interactive shell...")
                         break
                     }
 
-                    cmd.execute()
-                } catch (ex: UnexpectedInlineTokenException) {
+                    cmd.run()
+                } catch (ex: UnexpectedCommandTokenException) {
                     println("Error : ${ex.message}")
                     continue
                 }

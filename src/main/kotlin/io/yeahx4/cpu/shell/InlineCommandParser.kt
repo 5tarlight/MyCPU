@@ -1,5 +1,6 @@
 package io.yeahx4.cpu.shell
 
+@Deprecated("io.yeahx4.cpu.assembly.command.Command")
 class InlineCommandParser {
     companion object {
         fun parse(command: List<String>): InlineCommand {
