@@ -1,6 +1,13 @@
 package io.yeahx4.cpu.assembly.command
 
+import io.yeahx4.cpu.assembly.NumberParameterFormatException
+import io.yeahx4.cpu.assembly.QuitFailException
+import io.yeahx4.cpu.assembly.VariableNotFoundException
+import io.yeahx4.cpu.assembly.VariableRedeclaredException
+import io.yeahx4.cpu.assembly.memory.MemoryManager
 import io.yeahx4.cpu.logic.UnsignedByteException
+import io.yeahx4.cpu.logic.VByte
+import io.yeahx4.cpu.memory.NullMemoryPointerException
 
 data class Command(
     val type: CommandType,
@@ -23,7 +30,37 @@ data class Command(
         }
     }
 
+    private fun checkArgsLength(size: List<String>, least: Int) {
+        if (size.size < least) {
+            throw InsufficientParameterException()
+        }
+    }
+
+    /**
+     * @throws InsufficientParameterException Number of parameter is insufficient.
+     * @throws UnimplementedCommandException That command is not implemented.
+     * @throws NumberParameterFormatException Given parameter is not numeric, but
+     * required numeric value.
+     * @throws VariableRedeclaredException Variable with same name is already declared.
+     * @throws VariableNotFoundException name of the variable is unknown
+     */
     fun run() {
-        println("Command executed: $type, $args")
+        try {
+            when (this.type) {
+                CommandType.NEW_VAR -> {
+                    checkArgsLength(args, 2)
+                    val name = args[0]
+                    val value = args[1].toInt()
+
+                    MemoryManager
+                        .getInstance()
+                        .declare(name, value)
+                }
+                CommandType.QUIT -> throw QuitFailException()
+                else -> throw UnimplementedCommandException()
+            }
+        } catch (_: NumberFormatException) {
+            throw NumberParameterFormatException()
+        }
     }
 }

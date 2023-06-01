@@ -86,6 +86,7 @@ class VariableVolatility private constructor(){
      * An address where new variable will be stored is
      * automatically determined by system.
      *
+     * @throws VariableRedeclaredException Variable with same name is already declared.
      * @see assign
      */
     fun assign(name: String, value: VByte) {

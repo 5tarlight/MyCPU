@@ -2,6 +2,7 @@ package io.yeahx4.cpu.shell
 
 import io.yeahx4.cpu.logic.VByte
 
+@Deprecated("Obsolete")
 class NewVarPayload(args: List<String>): InlineCommandPayload {
     val name: String
     val value: VByte
